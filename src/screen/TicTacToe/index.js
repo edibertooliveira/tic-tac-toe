@@ -34,36 +34,42 @@ class TicTacToe extends React.Component {
     this.winningConditions = this.winningConditions.bind(this);
   }
 
-  winningConditions(playerCurrent) {
+  winningConditions(playerCurrent, activePlayer) {
     const [diagonal, vestical, horizontal] = returnWin;
-
+    console.log(activePlayer, playerCurrent);
     const checked =
       diagonal.find(value1 => value1[1].every(value2 => playerCurrent.includes(value2))) ||
       vestical.find(value1 => value1[1].every(value2 => playerCurrent.includes(value2))) ||
       horizontal.find(value1 => value1[1].every(value2 => playerCurrent.includes(value2)));
+      if(checked) {
+        activePlayer = activePlayer === 1 ? 2 : 1
+        this.setState(state => ({ ...state, activePlayer }));    
+      }
     this.setState(state => ({ ...state, endGame: checked }));
   }
 
   handlePlayersMove(position) {
-    let { activePlayer, gameBoard } = this.state;
-
-    const player = activePlayer === 1 ? 'X' : 'O';
-    const newGameBoard = [];
-    const activeRound = player === 'X' ? (activePlayer = 2) : (activePlayer = 1);
-
-    gameBoard.forEach((field, index) => {
-      if (index === position) field = player;
-      newGameBoard.push(field);
-    });
-
-    this.setState(state => ({
-      [`player${player}`]: [...state[`player${player}`], position],
-      activePlayer: activeRound,
-      gameBoard: newGameBoard,
-    }));
-    this.winningConditions([...this.state[`player${player}`], position]);
+    let { activePlayer, gameBoard, endGame} = this.state;
+    if (!endGame) {
+      
+      const player = activePlayer === 1 ? 'X' : 'O';
+      const newGameBoard = [];
+      const activeRound =  player === 'X' ? (activePlayer = 2) : (activePlayer = 1);
+      
+      gameBoard.forEach((field, index) => {
+        if (index === position) field = player;
+        newGameBoard.push(field);
+      });
+      
+      this.setState(state => ({
+        [`player${player}`]: [...state[`player${player}`], position],
+        activePlayer: activeRound,
+        gameBoard: newGameBoard,
+      }));
+      this.winningConditions([...this.state[`player${player}`], position], activeRound);
+    }
   }
-
+    
   render() {
     const { gameBoard, endGame, activePlayer } = this.state;
 
@@ -77,10 +83,10 @@ class TicTacToe extends React.Component {
     }
     return (
       <section className="ticTacToe">
+        <h1>Player {activePlayer}</h1>
         <GameBoard
           gameState={gameBoard}
           onClick={this.handlePlayersMove}
-          endGame={this.winningConditions}
         />
       </section>
     );
