@@ -36,7 +36,6 @@ class TicTacToe extends React.Component {
 
   winningConditions(playerCurrent, activePlayer) {
     const [diagonal, vestical, horizontal] = returnWin;
-    console.log(activePlayer, playerCurrent);
     const checked =
       diagonal.find(value1 => value1[1].every(value2 => playerCurrent.includes(value2))) ||
       vestical.find(value1 => value1[1].every(value2 => playerCurrent.includes(value2))) ||
