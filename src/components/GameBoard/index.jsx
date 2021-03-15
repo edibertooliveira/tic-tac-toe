@@ -1,7 +1,7 @@
 import React from 'react';
 import GameCell from '../GameCell';
 import PropTypes from 'prop-types';
-import './style.css';
+import { BoardContainer } from './style';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -27,11 +27,11 @@ class GameBoard extends React.Component {
   render() {
     const { gameState } = this.props;
     return (
-      <div className="game-board">
+      <BoardContainer className="game-board">
         {gameState.map((playerId, i) => (
           <GameCell id={i} positionPlayer={playerId} listenPlay={this.handleClick} />
         ))}
-      </div>
+      </BoardContainer>
     );
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import GameBoard from '../../components/GameBoard';
 import Confetti from '../../components/Confetti';
-import './style.css';
+import { TicTacToeContainer } from  './style.js';
 
 const returnWin = [
   [
@@ -103,7 +103,7 @@ class TicTacToe extends React.Component {
 
     if (endGame) {
       return (
-        <section className="ticTacToe">
+        <TicTacToeContainer>
           <Confetti />
           <h2>{`Fim de Jogo`}</h2>
           <h1>{` Vitoria ${endGame[0]} do Player ${activePlayer}`}</h1>
@@ -114,14 +114,14 @@ class TicTacToe extends React.Component {
           >
             {messageReset()}
           </button>
-        </section>
+        </TicTacToeContainer>
       );
     }
     return (
-      <section className="ticTacToe">
+      <TicTacToeContainer>
         <h1>Player {activePlayer}</h1>
         <GameBoard gameState={gameBoard} onClick={this.handlePlayersMove} />
-      </section>
+      </TicTacToeContainer>
     );
   }
 }
