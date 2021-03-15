@@ -9,7 +9,6 @@ export const CellConteiner = styled.div`
   margin: 5px;
   justify-self: center;
   align-self: center;
-
   img {
     display: flex;
     width:90%;

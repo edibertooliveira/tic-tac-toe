@@ -1,7 +1,8 @@
 import React from 'react';
 import GameBoard from '../../components/GameBoard';
+import DrawGame from '../../components/DrawGame';
 import Confetti from '../../components/Confetti';
-import { TicTacToeContainer } from  './style.js';
+import { TicTacToeContainer} from './style.js';
 
 const returnWin = [
   [
@@ -26,6 +27,7 @@ const INITIAL_STATE = {
   playerO: [],
   gameBoard: [0, 0, 0, 0, 0, 0, 0, 0, 0],
   endGame: false,
+  drawGame: false
 };
 
 const messageReset = () => {
@@ -37,6 +39,7 @@ const messageReset = () => {
     'Dá tempo pra outra? Reinicie o jogo',
   ];
   const random = Math.round(Math.random() * messages.length - 1);
+  console.log(random);
   return messages[random];
 };
 
@@ -46,8 +49,16 @@ class TicTacToe extends React.Component {
     this.state = INITIAL_STATE;
 
     this.handlePlayersMove = this.handlePlayersMove.bind(this);
+    this.handlePlayersDraw = this.handlePlayersDraw.bind(this);
     this.winningConditions = this.winningConditions.bind(this);
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  handlePlayersDraw() {
+    let { playerX, playerO, drawGame} = this.state;
+    const playersNineSttempts = playerX.length + playerO.length === 9;
+    if (playersNineSttempts && !drawGame)
+    this.setState((state) => ({ ...state, drawGame: true }))
   }
 
   winningConditions(playerCurrent, activePlayer) {
@@ -66,7 +77,7 @@ class TicTacToe extends React.Component {
       activePlayer = activePlayer === 1 ? 2 : 1;
       this.setState((state) => ({ ...state, activePlayer }));
     }
-    this.setState((state) => ({ ...state, endGame: checked }));
+    this.setState((state) => ({ ...state, endGame: checked }), ()=> this.handlePlayersDraw());
   }
 
   handlePlayersMove(position) {
@@ -95,11 +106,11 @@ class TicTacToe extends React.Component {
   }
 
   handleClick() {
-    this.setState({ ...INITIAL_STATE })
+    this.setState({ ...INITIAL_STATE });
   }
 
   render() {
-    const { gameBoard, endGame, activePlayer } = this.state;
+    const { gameBoard, drawGame, endGame, activePlayer } = this.state;
 
     if (endGame) {
       return (
@@ -108,11 +119,11 @@ class TicTacToe extends React.Component {
           <h2>{`Fim de Jogo`}</h2>
           <h1>{` Vitoria ${endGame[0]} do Player ${activePlayer}`}</h1>
           <button
-          style= {{ zIndex: 10}}
+            style={{ zIndex: 10 }}
             type="button"
-            onClick={ this.handleClick }
+            onClick={this.handleClick}
           >
-            {messageReset()}
+            {messageReset() || 'Reinicie o jogo'}
           </button>
         </TicTacToeContainer>
       );
@@ -121,6 +132,7 @@ class TicTacToe extends React.Component {
       <TicTacToeContainer>
         <h1>Player {activePlayer}</h1>
         <GameBoard gameState={gameBoard} onClick={this.handlePlayersMove} />
+        {drawGame && !endGame && <DrawGame onClick={this.handleClick} />}
       </TicTacToeContainer>
     );
   }
